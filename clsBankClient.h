@@ -11,12 +11,12 @@ class clsBankClient : public clsPerson
 {
 private:
 
-    enum enMode { EmptyMode = 0, UpdateMode = 1, AddNewMode = 2 };
+    enum enMode { EmptyMode = 0, UpdateMode = 1, AddNewMode = 2 ,DeleteMode=3};
     enMode _Mode;
     string _AccountNumber;
     string _PinCode;
     float _AccountBalance;
-
+    bool MarkToDelete = false;
 
     static clsBankClient _ConvertLinetoClientObject(string Line, string Seperator = "#//#")
     {
@@ -28,7 +28,7 @@ private:
 
     }
 
-    static string _ConverClientObjectToLine(clsBankClient Client, string Seperator = "#//#")
+    static string _ConvertClientObjectToLine(clsBankClient Client, string Seperator = "#//#")
     {
 
         string stClientRecord = "";
@@ -87,8 +87,13 @@ private:
 
             for (clsBankClient C : vClients)
             {
-                DataLine = _ConverClientObjectToLine(C);
-                MyFile << DataLine << endl;
+                if (C.MarkToDelete == false) {
+                    DataLine = _ConvertClientObjectToLine(C);
+                    MyFile << DataLine << endl;
+
+
+                }
+              
 
             }
 
@@ -120,7 +125,7 @@ private:
     void _AddNew()
     {
 
-        _AddDataLineToFile(_ConverClientObjectToLine(*this));
+        _AddDataLineToFile(_ConvertClientObjectToLine(*this));
     }
 
     void _AddDataLineToFile(string  stDataLine)
@@ -142,6 +147,12 @@ private:
     {
         return clsBankClient(enMode::EmptyMode, "", "", "", "", "", "", 0);
     }
+
+
+
+
+
+
 
 public:
 
@@ -296,7 +307,6 @@ public:
 
         case enMode::AddNewMode:
         {
-            //This will add new record to file or database
             if (clsBankClient::IsClientExist(_AccountNumber))
             {
                 return enSaveResults::svFaildAccountNumberExists;
@@ -305,7 +315,6 @@ public:
             {
                 _AddNew();
 
-                //We need to set the mode to update after add new
                 _Mode = enMode::UpdateMode;
                 return enSaveResults::svSucceeded;
             }
@@ -313,9 +322,7 @@ public:
             break;
         }
         }
-
     }
-
     static bool IsClientExist(string AccountNumber)
     {
 
@@ -323,10 +330,39 @@ public:
         return (!Client1.IsEmpty());
     }
 
+    bool Delete() {
+
+        vector<clsBankClient> _vClients;
+        _vClients = _LoadClientsDataFromFile();
+
+        for (clsBankClient& C : _vClients) {
+            if (C.AccountNumber() == _AccountNumber) {
+                C.MarkToDelete = true;
+                _SaveCleintsDataToFile(_vClients);
+                *this = _GetEmptyClientObject();
+                break;
+            }
+
+
+        }
+
+        return true;
+
+
+
+    }
+
+
+
+
+
     static clsBankClient GetAddNewClientObject(string AccountNumber)
     {
         return clsBankClient(enMode::AddNewMode, "", "", "", "", AccountNumber, "", 0);
     }
 
+
+  
+ 
 };
 
