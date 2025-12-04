@@ -27,30 +27,28 @@ void ReadClientInfo(clsBankClient& Client)
 void AddNewClient()
 {
     string AccountNumber = "";
-
-    cout << "\nPlease Enter Account Number: ";
+    cout << "\n Please Enter Account Number: ";
     AccountNumber = clsInputValidate::ReadString();
-    while (clsBankClient::IsClientExist(AccountNumber))
-    {
-        cout << "\nAccount Number Is Already Used, Choose another one: ";
+    while (clsBankClient::IsClientExist(AccountNumber)) {
+
+        cout << "\n Account Number Is Already Used, Choose another one:  ";
         AccountNumber = clsInputValidate::ReadString();
     }
 
-    clsBankClient NewClient = clsBankClient::GetAddNewClientObject(AccountNumber);
+    clsBankClient Client = clsBankClient::GetAddNewClientObject(AccountNumber);
 
-
-    ReadClientInfo(NewClient);
+    ReadClientInfo(Client);
 
     clsBankClient::enSaveResults SaveResult;
 
-    SaveResult = NewClient.Save();
+    SaveResult = Client.Save();
 
     switch (SaveResult)
     {
     case  clsBankClient::enSaveResults::svSucceeded:
     {
         cout << "\nAccount Addeded Successfully :-)\n";
-        NewClient.Print();
+        Client.Print();
         break;
     }
     case clsBankClient::enSaveResults::svFaildEmptyObject:
@@ -69,10 +67,57 @@ void AddNewClient()
 }
 
 
+
+
+void DeleteClient() {
+    string AccountNumber = "";
+
+    cout << "\n Please Enter Account Number: ";
+    AccountNumber = clsInputValidate::ReadString();
+    while (!clsBankClient::IsClientExist(AccountNumber)) {
+
+        cout << "\nAccount Number is not found, choose another one: ";
+        AccountNumber = clsInputValidate::ReadString();
+
+
+
+    }
+
+    clsBankClient Client = clsBankClient::Find(AccountNumber);
+ 
+    Client.Print();
+
+    cout << "\n Are you sure you want to delete this client y/n?";
+    char Answer = 'n';
+    cin >> Answer;
+
+    if (Answer == 'y' || Answer == 'Y') {
+
+
+        if (Client.Delete()) {
+
+            cout << "\n Client Deleted Successfully :) \n";
+            Client.Print();
+
+        }
+        else {
+            cout << "\n Error Client Was not Deleted\n";
+
+        }
+    }
+
+}
+
+
+
+
+
+
+
 int main()
 
 {
-    AddNewClient();
+    DeleteClient();
     system("pause>0");
     return 0;
 }
