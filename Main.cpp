@@ -1,68 +1,453 @@
+#pragma once
 #include <iostream>
+#include <string>
 #include "clsPerson.h"
-#include "clsBankClient.h"
-#include "clsInputValidate.h"
-#include <iomanip>
+#include "clsString.h"
+#include <vector>
+#include <fstream>
 
-void PrintClientRecordLine(clsBankClient Client)
+using namespace std;
+class clsBankClient : public clsPerson
 {
+private:
 
-    cout << "| " << setw(15) << left << Client.AccountNumber();
-    cout << "| " << setw(40) << left << Client.FullName();
-    cout << "| " << setw(20) << left << Client.AccountBalance;
+    enum enMode { EmptyMode = 0, UpdateMode = 1, AddNewMode = 2 ,DeleteMode=3};
+    enMode _Mode;
+    string _AccountNumber;
+    string _PinCode;
+    float _AccountBalance;
+    bool MarkToDelete = false;
 
-}
+    static clsBankClient _ConvertLinetoClientObject(string Line, string Seperator = "#//#")
+    {
+        vector<string> vClientData;
+        vClientData = clsString::Split(Line, Seperator);
 
-void ShowTotalBalances()
-{
-
-    vector <clsBankClient>vClients = clsBankClient::GetClientsList();
-    cout << "\n\t\t\t\t\tClient List (" << vClients.size() << ") Client(s).";
-    cout << "\n_______________________________________________________";
-    cout << "_________________________________________\n" << endl;
-
-    cout << "| " << left << setw(15) << "Account Number";
-    cout << "| " << left << setw(40) << "Client Name";
-    cout << "| " << left << setw(20) << "Balance";
-    cout << "\n_______________________________________________________";
-    cout << "_________________________________________\n" << endl;
-    if (vClients.size() == 0) {
-
-        cout << "\t\t\t No Clients Available In The System! ";
+        return clsBankClient(enMode::UpdateMode, vClientData[0], vClientData[1], vClientData[2],
+            vClientData[3], vClientData[4], vClientData[5], stod(vClientData[6]));
 
     }
-    else {
 
-        for (clsBankClient Client : vClients) {
+    static string _ConvertClientObjectToLine(clsBankClient Client, string Seperator = "#//#")
+    {
 
-            PrintClientRecordLine(Client);
-            cout << endl;
+        string stClientRecord = "";
+        stClientRecord += Client.FirstName + Seperator;
+        stClientRecord += Client.LastName + Seperator;
+        stClientRecord += Client.Email + Seperator;
+        stClientRecord += Client.Phone + Seperator;
+        stClientRecord += Client.AccountNumber() + Seperator;
+        stClientRecord += Client.PinCode + Seperator;
+        stClientRecord += to_string(Client.AccountBalance);
+
+        return stClientRecord;
+
+    }
+
+    static  vector <clsBankClient> _LoadClientsDataFromFile()
+    {
+
+        vector <clsBankClient> vClients;
+
+        fstream MyFile;
+        MyFile.open("Clients.txt", ios::in);//read Mode
+
+        if (MyFile.is_open())
+        {
+
+            string Line;
+
+
+            while (getline(MyFile, Line))
+            {
+
+                clsBankClient Client = _ConvertLinetoClientObject(Line);
+
+                vClients.push_back(Client);
+            }
+
+            MyFile.close();
+
+        }
+
+        return vClients;
+
+    }
+
+    static void _SaveCleintsDataToFile(vector <clsBankClient> vClients)
+    {
+
+        fstream MyFile;
+        MyFile.open("Clients.txt", ios::out);//overwrite
+
+        string DataLine;
+
+        if (MyFile.is_open())
+        {
+
+            for (clsBankClient C : vClients)
+            {
+                if (C.MarkToDelete == false) {
+                    DataLine = _ConvertClientObjectToLine(C);
+                    MyFile << DataLine << endl;
+
+
+                }
+              
+
+            }
+
+            MyFile.close();
+
+        }
+
+    }
+
+    void _Update()
+    {
+        vector <clsBankClient> _vClients;
+        _vClients = _LoadClientsDataFromFile();
+
+        for (clsBankClient& C : _vClients)
+        {
+            if (C.AccountNumber() == AccountNumber())
+            {
+                C = *this;
+                break;
+            }
+
+        }
+
+        _SaveCleintsDataToFile(_vClients);
+
+    }
+
+    void _AddNew()
+    {
+
+        _AddDataLineToFile(_ConvertClientObjectToLine(*this));
+    }
+
+    void _AddDataLineToFile(string  stDataLine)
+    {
+        fstream MyFile;
+        MyFile.open("Clients.txt", ios::out | ios::app);
+
+        if (MyFile.is_open())
+        {
+
+            MyFile << stDataLine << endl;
+
+            MyFile.close();
+        }
+
+    }
+
+    static clsBankClient _GetEmptyClientObject()
+    {
+        return clsBankClient(enMode::EmptyMode, "", "", "", "", "", "", 0);
+    }
+
+
+
+
+
+
+
+public:
+
+
+    clsBankClient(enMode Mode, string FirstName, string LastName,
+        string Email, string Phone, string AccountNumber, string PinCode,
+        float AccountBalance) :
+        clsPerson(FirstName, LastName, Email, Phone)
+
+    {
+        _Mode = Mode;
+        _AccountNumber = AccountNumber;
+        _PinCode = PinCode;
+        _AccountBalance = AccountBalance;
+
+    }
+
+    bool IsEmpty()
+    {
+        return (_Mode == enMode::EmptyMode);
+    }
+
+
+    string AccountNumber()
+    {
+        return _AccountNumber;
+    }
+
+    void SetPinCode(string PinCode)
+    {
+        _PinCode = PinCode;
+    }
+
+    string GetPinCode()
+    {
+        return _PinCode;
+    }
+    __declspec(property(get = GetPinCode, put = SetPinCode)) string PinCode;
+
+    void SetAccountBalance(float AccountBalance)
+    {
+        _AccountBalance = AccountBalance;
+    }
+
+    float GetAccountBalance()
+    {
+        return _AccountBalance;
+    }
+    __declspec(property(get = GetAccountBalance, put = SetAccountBalance)) float AccountBalance;
+
+    void Print()
+    {
+        cout << "\nClient Card:";
+        cout << "\n___________________";
+        cout << "\nFirstName   : " << FirstName;
+        cout << "\nLastName    : " << LastName;
+        cout << "\nFull Name   : " << FullName();
+        cout << "\nEmail       : " << Email;
+        cout << "\nPhone       : " << Phone;
+        cout << "\nAcc. Number : " << _AccountNumber;
+        cout << "\nPassword    : " << _PinCode;
+        cout << "\nBalance     : " << _AccountBalance;
+        cout << "\n___________________\n";
+
+    }
+
+    static clsBankClient Find(string AccountNumber)
+    {
+
+
+        fstream MyFile;
+        MyFile.open("Clients.txt", ios::in);//read Mode
+
+        if (MyFile.is_open())
+        {
+            string Line;
+            while (getline(MyFile, Line))
+            {
+                clsBankClient Client = _ConvertLinetoClientObject(Line);
+                if (Client.AccountNumber() == AccountNumber)
+                {
+                    MyFile.close();
+                    return Client;
+                }
+
+            }
+
+            MyFile.close();
+
+        }
+
+        return _GetEmptyClientObject();
+    }
+
+    static clsBankClient Find(string AccountNumber, string PinCode)
+    {
+
+
+
+        fstream MyFile;
+        MyFile.open("Clients.txt", ios::in);//read Mode
+
+        if (MyFile.is_open())
+        {
+            string Line;
+            while (getline(MyFile, Line))
+            {
+                clsBankClient Client = _ConvertLinetoClientObject(Line);
+                if (Client.AccountNumber() == AccountNumber && Client.PinCode == PinCode)
+                {
+                    MyFile.close();
+                    return Client;
+                }
+
+            }
+
+            MyFile.close();
+
+        }
+        return _GetEmptyClientObject();
+    }
+
+    enum enSaveResults { svFaildEmptyObject = 0, svSucceeded = 1, svFaildAccountNumberExists = 2 };
+
+
+    enSaveResults Save()
+    {
+
+        switch (_Mode)
+        {
+        case enMode::EmptyMode:
+        {
+            if (IsEmpty())
+            {
+
+                return enSaveResults::svFaildEmptyObject;
+
+            }
+
+        }
+
+        case enMode::UpdateMode:
+        {
+
+
+            _Update();
+
+            return enSaveResults::svSucceeded;
+
+            break;
+        }
+
+        case enMode::AddNewMode:
+        {
+            if (clsBankClient::IsClientExist(_AccountNumber))
+            {
+                return enSaveResults::svFaildAccountNumberExists;
+            }
+            else
+            {
+                _AddNew();
+
+                _Mode = enMode::UpdateMode;
+                return enSaveResults::svSucceeded;
+            }
+
+            break;
+        }
+        }
+    }
+    static bool IsClientExist(string AccountNumber)
+    {
+
+        clsBankClient Client1 = clsBankClient::Find(AccountNumber);
+        return (!Client1.IsEmpty());
+    }
+
+    bool Delete() {
+
+        vector<clsBankClient> _vClients;
+        _vClients = _LoadClientsDataFromFile();
+
+        for (clsBankClient& C : _vClients) {
+            if (C.AccountNumber() == _AccountNumber) {
+                C.MarkToDelete = true;
+                _SaveCleintsDataToFile(_vClients);
+                *this = _GetEmptyClientObject();
+                break;
+            }
 
 
         }
-        cout << "\n_______________________________________________________";
-        cout << "_________________________________________\n" << endl;
 
-        cout << "\n\t\t\t\tTotal Balances = " << clsBankClient::GetTotalBalances() << "\n";
-        cout << "\t\t\t\t( " << clsBankClient::NumberToText(clsBankClient::GetTotalBalances()) << ")";
+        return true;
+
 
 
     }
 
-}
+
+    static vector< clsBankClient> GetClientsList() {
+
+        return _LoadClientsDataFromFile();
+    }
 
 
 
 
+    static clsBankClient GetAddNewClientObject(string AccountNumber)
+    {
+        return clsBankClient(enMode::AddNewMode, "", "", "", "", AccountNumber, "", 0);
+    }
 
 
 
 
+    static float GetTotalBalances() {
+        vector<clsBankClient> vClients = clsBankClient::GetClientsList();
+        double TotalBalances = 0;
 
-int main()
 
-{
-    ShowTotalBalances();
-    system("pause>0");
-    return 0;
-}
+        for (clsBankClient Client : vClients) {
+            TotalBalances += Client.AccountBalance;
+
+        }
+        return TotalBalances;
+
+
+    }
+
+
+    static string NumberToText(int Number)
+    {
+        if (Number == 0)
+        {
+            return "";
+        }
+
+        if (Number >= 1 && Number <= 19)
+        {
+            string arr[] = { "", "One","Two","Three","Four","Five","Six","Seven",
+                             "Eight","Nine","Ten","Eleven","Twelve","Thirteen",
+                             "Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen" };
+
+            return arr[Number] + " ";
+        }
+
+        if (Number >= 20 && Number <= 99)
+        {
+            string arr[] = { "","", "Twenty","Thirty","Forty","Fifty","Sixty",
+                             "Seventy","Eighty","Ninety" };
+
+            return arr[Number / 10] + " " + NumberToText(Number % 10);
+        }
+
+        if (Number >= 100 && Number <= 199)
+        {
+            return "One Hundred " + NumberToText(Number % 100);
+        }
+
+        if (Number >= 200 && Number <= 999)
+        {
+            return NumberToText(Number / 100) + "Hundreds " + NumberToText(Number % 100);
+        }
+
+        if (Number >= 1000 && Number <= 1999)
+        {
+            return "One Thousand " + NumberToText(Number % 1000);
+        }
+
+        if (Number >= 2000 && Number <= 999999)
+        {
+            return NumberToText(Number / 1000) + "Thousands " + NumberToText(Number % 1000);
+        }
+
+        if (Number >= 1000000 && Number <= 1999999)
+        {
+            return "One Million " + NumberToText(Number % 1000000);
+        }
+
+        if (Number >= 2000000 && Number <= 999999999)
+        {
+            return NumberToText(Number / 1000000) + "Millions " + NumberToText(Number % 1000000);
+        }
+
+        if (Number >= 1000000000 && Number <= 1999999999)
+        {
+            return "One Billion " + NumberToText(Number % 1000000000);
+        }
+
+        // For numbers >= 2 Billion
+        return NumberToText(Number / 1000000000) + "Billions " + NumberToText(Number % 1000000000);
+    }
+
+  
+ 
+};
+
