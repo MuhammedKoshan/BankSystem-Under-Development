@@ -5,13 +5,13 @@
 #include "clsString.h"
 #include <vector>
 #include <fstream>
-
+#include "clsUtil.h"
 using namespace std;
 class clsBankClient : public clsPerson
 {
 private:
 
-    enum enMode { EmptyMode = 0, UpdateMode = 1, AddNewMode = 2 ,DeleteMode=3};
+    enum enMode { EmptyMode = 0, UpdateMode = 1, AddNewMode = 2, DeleteMode = 3 };
     enMode _Mode;
     string _AccountNumber;
     string _PinCode;
@@ -93,7 +93,7 @@ private:
 
 
                 }
-              
+
 
             }
 
@@ -384,8 +384,5 @@ public:
     }
 
 
-   
-  
- 
-};
 
+};
