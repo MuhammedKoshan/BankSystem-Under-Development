@@ -5,7 +5,11 @@
 #include "clsInputValidate.h"
 #include "clsBankClient.h";
 #include "clsClientListScreen.h"
-
+#include "clsAddNewClientScreen.h"
+#include "clsDeleteClientScreen.h"
+#include "clsUpdateClientScreen.h"
+#include "clsFindClientScreen.h"
+#include "clsTransactionsScreen.h"
 using namespace std;
 
 
@@ -16,6 +20,7 @@ private:
         eListClinets = 1, eAddNewClient = 2, eDeleteClient = 3, eUpdateClient = 4,
         eFindClient = 5, eShowTransationsMenue = 6, eManagaUsers = 7,eExit = 8
     };
+
 
    static int _ReadMainMenueOption() {
        cout << "\t\t\t\t\tChoose what do you want to do? [1 to 8]?";
@@ -42,34 +47,41 @@ private:
    }
 
    static void _ShowAddClientsScreen() {
-       cout << "\nAdd Client List Screen Will be here...\n";
+   //   cout << "\nAdd Client List Screen Will be here...\n";
+
+       clsAddNewClientScreen::ShowAddNewClientScreen();
+      
 
 
    }
 
    static void _ShowDeleteClientsScreen() {
 
-       cout << "\nDelete Client List Screen Will be here...\n";
+     // cout << "\nDelete Client List Screen Will be here...\n";
+
+       clsDeleteClientScreen::ShowDeleteClientScreen();
+
 
 
    }
    static void _ShowUpdateClientsScreen() {
 
-       cout << "\nUpdate Client List Screen Will be here...\n";
-
+       // cout << "\nUpdate Client List Screen Will be here...\n";
+       clsUpdateClientScreen::ShowUpdateClientScreen();
    }
 
    static void _ShowFindClientsScreen() {
 
-       cout << "\nFind Client List Screen Will be here...\n";
-
-
+     //  cout << "\nFind Client List Screen Will be here...\n";
+       clsFindClientScreen::ShowUpdateClientScreen();
    }
 
 
    static void _ShowClientsTransactionsMenue() {
 
-       cout << "\nTransactions Menue Will be here...\n";
+     //  cout << "\nTransactions Menue Will be here...\n";
+
+       clsTransactionsScreen::ShowTransactionsScreen();
 
    }
    static void _ShowManagerUserMenue() {
@@ -151,7 +163,7 @@ public :
 	static void ShowMainMenue() {
 
 		system("cls");
-		_DrawScreenHeader("\t\tMain Screen\n\n");
+		_DrawScreenHeader("\t\tMain Screen");
 
 
         cout << setw(37) << left << "" << "===========================================\n";
@@ -173,16 +185,6 @@ public :
 
 
 	}
-
-
-
-
-
-
-
-
-
-
 
 };
 
