@@ -117,6 +117,17 @@ public:
 		}
 		return Number;
 	}
+	static short ReadShortNumberBetween(short From, short To, string ErrorMessage = "Number is not within range, Enter again:\n"){
+
+		short Number = ReadFloatNumber();
+
+		while (!IsNumberBetween(Number, From, To)) {
+			cout << ErrorMessage;
+			Number = ReadDblNumber();
+		}
+		return Number;
+
+}
 
 	static double ReadDblNumberBetween(double From, double To, string ErrorMessage = "Number is not within range, Enter again:\n")
 	{
@@ -133,7 +144,7 @@ public:
 	{
 		return	clsDate::IsValidDate(Date);
 	}
-	
+
 
 	static string ReadString()
 	{
@@ -143,4 +154,3 @@ public:
 		return S1;
 	}
 };
-
