@@ -203,22 +203,23 @@ public:
     }
     __declspec(property(get = GetAccountBalance, put = SetAccountBalance)) float AccountBalance;
 
-   // No Ui related code inside object
-    //void Print()
-    //{
-    //    cout << "\nClient Card:";
-    //    cout << "\n___________________";
-    //    cout << "\nFirstName   : " << FirstName;
-    //    cout << "\nLastName    : " << LastName;
-    //    cout << "\nFull Name   : " << FullName();
-    //    cout << "\nEmail       : " << Email;
-    //    cout << "\nPhone       : " << Phone;
-    //    cout << "\nAcc. Number : " << _AccountNumber;
-    //    cout << "\nPassword    : " << _PinCode;
-    //    cout << "\nBalance     : " << _AccountBalance;
-    //    cout << "\n___________________\n";
+    // No Ui related code inside object
+     //void Print()
+     //{
+     //    cout << "\nClient Card:";
+     //    cout << "\n___________________";
+     //    cout << "\nFirstName   : " << FirstName;
+     //    cout << "\nLastName    : " << LastName;
+     //    cout << "\nFull Name   : " << FullName();
+     //    cout << "\nEmail       : " << Email;
+     //    cout << "\nPhone       : " << Phone;
+     //    cout << "\nAcc. Number : " << _AccountNumber;
+     //    cout << "\nPassword    : " << _PinCode;
+     //    cout << "\nBalance     : " << _AccountBalance;
+     //    cout << "\n___________________\n";
 
-    //}
+     //}
+
 
     static clsBankClient Find(string AccountNumber)
     {
@@ -368,6 +369,23 @@ public:
     }
 
 
+
+    void Deposit(double Amount) {
+        _AccountBalance += Amount;
+        Save();
+
+    }
+
+    bool WithDraw(double Amount) {
+        if (Amount > _AccountBalance) {
+            return false;
+
+        }
+
+        _AccountBalance -= Amount;
+        Save();
+
+    }
 
 
     static float GetTotalBalances() {
