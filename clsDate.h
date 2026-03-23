@@ -1,12 +1,13 @@
 
-//ProgrammingAdivces.com
-//Mohammed Abu-Hadhoud
 #pragma warning(disable : 4996)
+
 #pragma once
 
 #include<iostream>
 #include<string>
 #include "clsString.h"
+#include <ctime>
+#include <sstream>
 
 using namespace std;
 
@@ -139,7 +140,25 @@ public:
 		return true;
 
 	}
+	 static string GetDateTime()
+    {
+        time_t now = time(0);
 
+        tm localTime;
+        localtime_s(&localTime, &now);
+
+        stringstream ss;
+
+        ss << setw(2) << setfill('0') << localTime.tm_mday << "/"
+            << setw(2) << setfill('0') << (localTime.tm_mon + 1) << "/"
+            << (localTime.tm_year + 1900)
+            << " - "
+            << setw(2) << setfill('0') << localTime.tm_hour << ":"
+            << setw(2) << setfill('0') << localTime.tm_min << ":"
+            << setw(2) << setfill('0') << localTime.tm_sec;
+
+        return ss.str();
+    }
 	bool IsValid()
 	{
 		return IsValidDate(*this);
@@ -164,6 +183,7 @@ public:
 		return (Year % 4 == 0 && Year % 100 != 0) || (Year % 400 == 0);
 	}
 
+	
 	bool isLeapYear()
 	{
 		return isLeapYear(_Year);
@@ -181,7 +201,7 @@ public:
 
 	static short NumberOfHoursInAYear(short Year)
 	{
-		return  NumberOfDaysInAYear(Year) * 24;
+		return  isLeapYear(Year) ? (NumberOfDaysInAYear(Year) * 24) + 24 : NumberOfDaysInAYear(Year) * 24;
 	}
 
 	short NumberOfHoursInAYear()
