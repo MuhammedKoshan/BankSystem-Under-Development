@@ -1,5 +1,5 @@
-//ProgrammingAdivces.com
-//Mohammed Abu-Hadhoud
+#pragma once
+
 
 #pragma once
 #include <iostream>
@@ -7,18 +7,11 @@
 #include "clsString.h"
 #include "clsDate.h"
 
+
 class clsInputValidate
 {
 
 public:
-
-	static bool IsNumberBetween(short Number, short From, short To)
-	{
-		if (Number >= From && Number <= To)
-			return true;
-		else
-			return false;
-	}
 
 	static bool IsNumberBetween(int Number, int From, int To)
 	{
@@ -26,12 +19,20 @@ public:
 			return true;
 		else
 			return false;
+	}
+
+	static bool IsNumberBetween(float Number, float From, float To)
+	{
+		if (Number >= From && Number <= To)
+			return true;
+		else
+			return false;
 
 	}
 
 
 
-	static bool IsNumberBetween(double Number, double From, double To)
+	static bool IsNumberBetween(float Number, double From, double To)
 	{
 		if (Number >= From && Number <= To)
 			return true;
@@ -102,7 +103,7 @@ public:
 
 		while (!IsNumberBetween(Number, From, To)) {
 			cout << ErrorMessage;
-			Number = ReadDblNumber();
+			Number = ReadFloatNumber();
 		}
 		return Number;
 	}
@@ -117,7 +118,7 @@ public:
 		}
 		return Number;
 	}
-	static short ReadShortNumberBetween(short From, short To, string ErrorMessage = "Number is not within range, Enter again:\n"){
+	static short ReadShortNumberBetween(short From, short To, string ErrorMessage = "Number is not within range, Enter again:\n") {
 
 		short Number = ReadFloatNumber();
 
@@ -127,9 +128,9 @@ public:
 		}
 		return Number;
 
-}
+	}
 
-	static double ReadDblNumberBetween(double From, double To, string ErrorMessage = "Number is not within range, Enter again:\n")
+	static double ReadDblNumberBetween(int From, int To, string ErrorMessage = "Number is not within range, Enter again:\n")
 	{
 		double Number = ReadDblNumber();
 
