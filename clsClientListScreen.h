@@ -9,7 +9,7 @@ class clsClientListScreen :protected clsScreen
 {
 
 private:
-    static void PrintClientRecordLine(clsBankClient Client)
+    static void _PrintClientRecordLine(clsBankClient Client)
     {
 
         cout << setw(8) << left << "" << "| " << setw(15) << left << Client.AccountNumber();
@@ -26,6 +26,11 @@ public:
 
     static void ShowClientsList()
     {
+
+        if (!CheckAccessRights(clsUser::enPermissions::pListClients)) {
+
+            return;
+        }
 
 
         vector <clsBankClient> vClients = clsBankClient::GetClientsList();
@@ -54,7 +59,7 @@ public:
             for (clsBankClient Client : vClients)
             {
 
-                PrintClientRecordLine(Client);
+                _PrintClientRecordLine(Client);
                 cout << endl;
             }
 
@@ -64,3 +69,4 @@ public:
     }
 
 };
+
