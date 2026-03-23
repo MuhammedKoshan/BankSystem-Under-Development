@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include "clsUtil.h"
+#include "TransferLogScreen.h"
 using namespace std;
 class clsBankClient : public clsPerson
 {
@@ -97,6 +98,7 @@ private:
 
             }
 
+
             MyFile.close();
 
         }
@@ -105,20 +107,22 @@ private:
 
     void _Update()
     {
-        vector <clsBankClient> _vClients;
-        _vClients = _LoadClientsDataFromFile();
+        vector<clsBankClient>_vClients = _LoadClientsDataFromFile();
 
-        for (clsBankClient& C : _vClients)
-        {
-            if (C.AccountNumber() == AccountNumber())
-            {
+        for (clsBankClient& C : _vClients) {
+            if (C.AccountNumber() == _AccountNumber) {
+
                 C = *this;
                 break;
             }
 
+
         }
 
         _SaveCleintsDataToFile(_vClients);
+
+
+
 
     }
 
@@ -148,10 +152,37 @@ private:
         return clsBankClient(enMode::EmptyMode, "", "", "", "", "", "", 0);
     }
 
+    ////string _PrepareTransferLogRecord(float Amount, clsBankClient DestinationClient,
+    ////    string UserName, string Seperator = "#//#")
+    ////{
+
+    ////    string TransferLogRecord = "";
+    ////    TransferLogRecord += clsDate::GetDateTime() + Seperator;
+    ////    TransferLogRecord += AccountNumber() + Seperator;
+    ////    TransferLogRecord += DestinationClient.AccountNumber() + Seperator;
+    ////    TransferLogRecord += to_string(Amount) + Seperator;
+    ////    TransferLogRecord += to_string(AccountBalance) + Seperator;
+    ////    TransferLogRecord += to_string(DestinationClient.AccountBalance) + Seperator;
+    ////    TransferLogRecord += UserName;
+    ////    return TransferLogRecord;
 
 
+    ////    // التاريخ سنب
+    ////}
 
 
+    string _PrepareTransferLogiRecord(float Amount, clsBankClient& DestinationClient, string UserName, string Seperator = "#//#") {
+
+        string TransferLog = "";
+        TransferLog += clsDate::GetDateTime() + Seperator;
+        TransferLog += AccountNumber() + Seperator;
+        TransferLog += DestinationClient.AccountNumber() + Seperator;
+        TransferLog += to_string(Amount) + Seperator;
+        TransferLog += to_string(AccountBalance) + Seperator;
+        TransferLog += to_string(DestinationClient.AccountBalance) + Seperator;
+        TransferLog += UserName;
+        return TransferLog;
+    }
 
 
 public:
@@ -323,6 +354,9 @@ public:
 
             break;
         }
+        case enMode::DeleteMode:
+
+            return enSaveResults::svSucceeded;
         }
     }
     static bool IsClientExist(string AccountNumber)
@@ -342,6 +376,7 @@ public:
                 C.MarkToDelete = true;
                 _SaveCleintsDataToFile(_vClients);
                 *this = _GetEmptyClientObject();
+
                 break;
             }
 
@@ -362,13 +397,10 @@ public:
 
 
 
-
     static clsBankClient GetAddNewClientObject(string AccountNumber)
     {
         return clsBankClient(enMode::AddNewMode, "", "", "", "", AccountNumber, "", 0);
     }
-
-
 
     void Deposit(double Amount) {
         _AccountBalance += Amount;
@@ -402,6 +434,48 @@ public:
 
     }
 
+    bool Transfer(float Amount, clsBankClient& DestinationCllient,string UserName) {
+        string time = clsDate::GetDateTime();
 
+        WithDraw(Amount);
+        DestinationCllient.Deposit(Amount);
+        TransferLog(Amount, DestinationCllient, UserName, "#//#");
+  
+        return true;
+
+    }
+    /*  void TransferLogs(float Amount ,clsBankClient DestinationClient,
+         string UserName, string Seperator="#//#") {
+
+         string stDataLine = _PrepareTransferLogRecord(Amount,DestinationClient,UserName,Seperator);
+         fstream MyFile;
+         MyFile.open("TransferLog.txt", ios::out | ios::app);
+
+         if (MyFile.is_open())
+         {
+
+             MyFile << stDataLine << endl;
+
+             MyFile.close();
+         }
+
+
+
+     }*/
+
+    void TransferLog(float Amount, clsBankClient DestinationClient,
+        string UserName, string Seperator = "#//#") {
+
+        string stDataline = _PrepareTransferLogiRecord(Amount, DestinationClient, UserName);
+        fstream MyFile;
+        MyFile.open("TransferLog.txt", ios::out | ios::app);
+        if (MyFile.is_open()) {
+
+
+            MyFile << stDataline << endl;
+            MyFile.close();
+        }
+
+    }
 
 };
