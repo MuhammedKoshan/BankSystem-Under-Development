@@ -1,96 +1,77 @@
 #pragma once
-#include <iostream>
+#include  <iostream>
 #include "clsScreen.h"
 #include "clsBankClient.h"
 
 #include "clsInputValidate.h"
-
-
 using namespace std;
-class clsWithDrawScreen : protected clsScreen {
+class clsWithdrawScreen : protected clsScreen {
 
+private:
 
-private :     static void _PrintClient(clsBankClient Client) {
+	static void _PrintClient(clsBankClient Client)
+	{
+		cout << "\nClient Card:";
+		cout << "\n___________________";
+		cout << "\nFirstName   : " << Client.FirstName;
+		cout << "\nLastName    : " << Client.LastName;
+		cout << "\nFull Name   : " << Client.FullName();
+		cout << "\nEmail       : " << Client.Email;
+		cout << "\nPhone       : " << Client.Phone;
+		cout << "\nAcc. Number : " << Client.AccountNumber();
+		cout << "\nPassword    : " << Client.PinCode;
+		cout << "\nBalance     : " << Client.AccountBalance;
+		cout << "\n___________________\n";
 
-    cout << "\nClient Card:";
-    cout << "\n___________________";
-    cout << "\nFirstName   : " << Client.FirstName;
-    cout << "\nLastName    : " << Client.LastName;
-    cout << "\nFull Name   : " << Client.FullName();
-    cout << "\nEmail       : " << Client.Email;
-    cout << "\nPhone       : " << Client.Phone;
-    cout << "\nAcc. Number : " << Client.AccountNumber();
-    cout << "\nPassword    : " << Client.PinCode;
-    cout << "\nBalance     : " << Client.AccountBalance;
-    cout << "\n___________________\n";
-
-}
-
-        static string _ReadAccountNumber() {
-
-            string AccountNumber = "";
-            cout << "\nPlease enter AccountNumber? ";
-            cin >> AccountNumber;
-            return AccountNumber;
-        }
-
+	}
 
 public:
-    static void ShowWithDrawScreen()
-    {
-        _DrawScreenHeader("\t   Withdraw Screen");
 
-        string AccountNumber = _ReadAccountNumber();
+	static void ShowWithdrawScreen() {
 
+		_DrawScreenHeader("\tWithdraw  Screen");
+		cout << "Enter Account Number to Withdraw";
+		string AccountNumber = clsInputValidate::ReadString();
+		while (!clsBankClient::IsClientExist(AccountNumber)) {
+			cout << "No client in this Account Number try another one: ";
+			cin >> AccountNumber;
+		}
+		clsBankClient Client = clsBankClient::Find(AccountNumber);
+		_PrintClient(Client);
+		cout << "How Much you want to Withdaw: ";
+		int Amount = clsInputValidate::ReadDblNumber();
+		
+		cout << "Are you sure you want to perform this transaction? y/n? ";
+		char Answer = 'n';
+		cin >> Answer;
+		if (Answer == 'y' || Answer == 'Y')
+		{
+			if (Client.WithDraw(Amount)) {
 
-        while (!clsBankClient::IsClientExist(AccountNumber))
-        {
-            cout << "\nClient with [" << AccountNumber << "] does not exist.\n";
-            AccountNumber = _ReadAccountNumber();
-        }
-
-        clsBankClient Client1 = clsBankClient::Find(AccountNumber);
-        _PrintClient(Client1);
-
-        double Amount = 0;
-        cout << "\nPlease enter withdraw amount? ";
-        Amount = clsInputValidate::ReadDblNumber();
-
-        cout << "\nAre you sure you want to perform this transaction? ";
-        char Answer = 'n';
-        cin >> Answer;
-
-        if (Answer == 'Y' || Answer == 'y')
-        {
-            if (!Client1.WithDraw(Amount)) {
-                cout << "\nCannot Withdraw, Insuffecient Balance!\n";
-                cout << "\nAmount to withdraw is:" << Amount;
-
-                cout << "\nYour Balance is: " << Client1.AccountBalance;
-
-
-            }
-            else {
-                cout << "\nAmount Withdrawed Successfully.";
-                cout << "\nNew Balance Is: " << Client1.AccountBalance;
-            }
-                ;
-           
-
-        }
-        else
-        {
-            cout << "\nOperation was cancelled.\n";
-        }
-
-    }
+				cout << "Amount Withdraw Succesfully\n";
+				cout << "\nNew Balance Is: " << Client.AccountBalance;
 
 
 
+			}
+			else {
+
+				cout << "Cancelled";
+
+			}
+
+		
+
+			
+			
 
 
+		}
+		else {
+			cout << "Withdraw operation cancelled";
+		}
 
 
-
+	}
 
 };
