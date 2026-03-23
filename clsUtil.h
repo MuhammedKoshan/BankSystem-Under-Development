@@ -1,4 +1,6 @@
 #pragma once
+#pragma once
+#pragma once
 #include <iostream>
 #include <string>
 #include "clsDate.h"
@@ -10,7 +12,7 @@ class clsUtil
 
 public:
     enum enCharType {
-        SamallLetter = 1, CapitalLetter = 2,
+        SmallLetter = 1, CapitalLetter = 2,
         Digit = 3, MixChars = 4, SpecialCharacter = 5
     };
 
@@ -41,7 +43,7 @@ public:
         switch (CharType)
         {
 
-        case enCharType::SamallLetter:
+        case enCharType::SmallLetter:
         {
             return char(RandomNumber(97, 122));
             break;
@@ -68,7 +70,23 @@ public:
         }
         }
     }
+    static string Encryption(string Text, int key) {
+        for (int i = 0; i < Text.length(); i++) {
 
+            Text[i] = char((int)Text[i] + key);
+        }
+        return Text;
+
+    }
+    static string Decryption(string Text, int Key) {
+
+        for (int i = 0; i < Text.length(); i++) {
+
+            Text[i] = char((int)Text[i] - Key);
+        }
+        return Text;
+
+    }
     static  string GenerateWord(enCharType CharType, short Length)
 
     {
@@ -84,7 +102,7 @@ public:
         return Word;
     }
 
-    static string  GenerateKey(enCharType CharType = CapitalLetter)
+    static string  GenerateKey(enCharType CharType)
     {
 
         string Key = "";
@@ -284,4 +302,3 @@ public:
 
 
 };
-
