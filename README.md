@@ -46,13 +46,13 @@ This project was built to practice:
 ## 📸 Preview
 
 ### 🔐 Login Screen
-![Login](images/login.png)
+<img width="1106" height="615" alt="image" src="https://github.com/user-attachments/assets/bb1d4b84-8a5f-43a0-b5ef-cca1d6f685ec" />
+
 
 ### 📋 Main Menu
-![Main](images/main.png)
+<img width="1105" height="615" alt="image" src="https://github.com/user-attachments/assets/b5eea8e6-d5a5-4f2f-bc18-b5064168cd34" />
 
-### 👥 Clients List
-![Clients](images/clients.png)
+
 
 ---
 
