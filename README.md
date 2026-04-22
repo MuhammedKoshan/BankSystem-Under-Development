@@ -1,5 +1,1 @@
-# BankSystem-Development
-A C++ Bank Management System.
-The latest update adds a feature to display all clients in a formatted table along with calculating and printing the total sum of all account balances (both numerically and in words)
-
-// Finished this project (without UI) just for getting a better logic and in order to learn dealing with oop class.
+A C++ Bank Management System developed to practice object-oriented programming and core logic. The system supports client management, transactions, currency operations, and displays client data in a formatted table with total balances calculated both numerically and in words.
