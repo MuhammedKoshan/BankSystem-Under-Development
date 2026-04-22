@@ -31,3 +31,73 @@ This project was built to practice:
 - The system uses text files as a simple database
 - No graphical interface (console-based)
 
+
+
+# 🏦 Bank Management System (C++)
+
+![C++](https://img.shields.io/badge/C%2B%2B-17-blue)
+![OOP](https://img.shields.io/badge/Paradigm-OOP-green)
+![Platform](https://img.shields.io/badge/Platform-Console-lightgrey)
+![Storage](https://img.shields.io/badge/Storage-File%20System-orange)
+![Status](https://img.shields.io/badge/Project-Completed-brightgreen)
+
+---
+
+## 📸 Preview
+
+### 🔐 Login Screen
+![Login](images/login.png)
+
+### 📋 Main Menu
+![Main](images/main.png)
+
+### 👥 Clients List
+![Clients](images/clients.png)
+
+---
+
+## 🚀 Overview
+A **console-based Bank Management System** built using **C++** to demonstrate strong understanding of object-oriented programming, system design, and real-world banking operations.
+
+---
+
+## ✨ Features
+
+- 👤 Client Management  
+  Add / Update / Delete / Find clients  
+
+- 🔐 Authentication System  
+  Secure login & user management  
+
+- 💸 Transactions  
+  Deposit, Withdraw, Transfer between accounts  
+
+- 📊 Reporting  
+  Display clients in formatted tables  
+
+- 💰 Total Balances  
+  Calculate and display balances:
+  - Numerically  
+  - In words  
+
+- 💱 Currency System  
+  Currency exchange & calculator  
+
+- 🧾 Logs  
+  Track all transfer operations  
+
+---
+
+## 🛠️ Tech Stack
+
+- **Language:** C++  
+- **Concepts:** OOP (Encapsulation, Inheritance, Abstraction)  
+- **Storage:** Text Files (.txt)  
+- **Interface:** Console Application  
+
+---
+
+## 📂 Project Structure
+
+
+
